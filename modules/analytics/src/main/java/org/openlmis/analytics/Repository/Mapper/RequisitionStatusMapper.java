@@ -131,4 +131,12 @@ public interface RequisitionStatusMapper {
             "group by  vwd.region_name, vwd.district_name,vwd.zone_name, vwd.district_id")
     List<HashMap<String,Object>>getSourceOfFundsByLocation(@Param("program") Long program,
                                                            @Param("period") Long period);
+
+
+    @Select("SELECT status AS \"status\", count(*) AS \"count\"\n" +
+            "FROM requisitions\n" +
+            "GROUP BY status\n" +
+            "ORDER BY status ASC")
+    List<HashMap<String,Object>> pendingWorkLoad();
+
 }

@@ -1,6 +1,6 @@
-function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
-    GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
-    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData, $sce) {
+function AnalyticsFunction(notifications, $stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
+                           GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary, GetPendingWorkloadData,
+                           DefaultProgram, StockStatusByProgramData, FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData, $sce) {
 
     $scope.stockAvailabilityDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjI5fSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjYxOTIxfQ.DL5Bg84TX9piTpkPV7qWK4fuZGUi8-mV6akR9c106EA?tracer=true#bordered&titled");
     $scope.requisitionsDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjMwfSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjU1ODQ2fQ.ZRgC14-wKY8KD9CO0keABm6aNozR9kkRG3m99yzmibQ#bordered=true&titled=true");
@@ -11,19 +11,18 @@ function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnR
 
     var params;
 
-    DefaultProgram.get({}, function(data) {
-
+    DefaultProgram.get({}, function (data) {
 
 
         if (!isUndefined(data)) {
             var program = data.program;
 
-            FullProcessingPeriodData.get({program:parseInt(0,10)}).then(function(data){
-            console.log(data);
+            FullProcessingPeriodData.get({program: parseInt(0, 10)}).then(function (data) {
+                console.log(data);
 
                 var period = data;
 
-               var newParam = {
+                var newParam = {
                     product: parseInt(2434, 10),
                     year: parseInt(data.stringYear, 10),
                     program: parseInt(program.id, 10),
@@ -41,39 +40,39 @@ function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnR
 
                 //start loading functions by applying default parameters
 
-               // $scope.loadMap(params);
+                // $scope.loadMap(params);
 
                 //$rootScope.loadGeoFacilityStockMap($scope.$parent.params);
 
-               // $scope.loadConsumptionTrendsData($scope.$parent.params);
+                // $scope.loadConsumptionTrendsData($scope.$parent.params);
                 //$scope.loadStockStatusByProgram(params,'level1');
-               // $rootScope.loadStockStatusSummary($scope.$parent.params);
+                // $rootScope.loadStockStatusSummary($scope.$parent.params);
                 //$rootScope.loadStockStatusByProgramAndYearData(params);
                 //$rootScope.loadStockAvailableByLevel($scope.$parent.params);
-              //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
+                //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
                 //$rootScope.loadConsumptionTrendSummary(params);
 
-if (typeof $rootScope.loadEmergencyCommoditiesDashlets !== "undefined") {
-           $rootScope.loadEmergencyCommoditiesDashlets(params);
-}
+                if (typeof $rootScope.loadEmergencyCommoditiesDashlets !== "undefined") {
+                    $rootScope.loadEmergencyCommoditiesDashlets(params);
+                }
 
-if (typeof $rootScope.loadLatestReportedStockStatus !== "undefined") {
-           $rootScope.loadLatestReportedStockStatus(params);
-}
+                if (typeof $rootScope.loadLatestReportedStockStatus !== "undefined") {
+                    $rootScope.loadLatestReportedStockStatus(params);
+                }
 
-if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
-           $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
-}
+                if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
+                    $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
+                }
 
-               loadRegularEmergenceTrend(params);
+                loadRegularEmergenceTrend(params);
 
-               // $rootScope.loadHealthCommoditiesFinancing(params);
+                // $rootScope.loadHealthCommoditiesFinancing(params);
 
-              //  $rootScope.loadStockOutRate(params);
+                //  $rootScope.loadStockOutRate(params);
                 //$rootScope.loadCommoditiesComparison($scope.$parent.params);
 
 
-               //$rootScope.loadStockImbalance(params);
+                //$rootScope.loadStockImbalance(params);
 //                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
             });
 
@@ -82,7 +81,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
     function loadRegularEmergenceTrend(params) {
 
-        GetEmergencyAndRegularRnRTrendsData.get(params).then(function(data) {
+        GetEmergencyAndRegularRnRTrendsData.get(params).then(function (data) {
             if (data.length > 0) {
                 var categories = _.pluck(data, 'Month');
                 var emergency = _.pluck(data, 'Emergency Requisitions');
@@ -153,8 +152,6 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
             }
 
         });
-
-
 
 
         /* Highcharts.chart('rnrSummary', {
@@ -232,27 +229,26 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
          });*/
 
 
-
     }
 
     function loadKpiSection(parameters) {
-    console.log(parameters);
+        console.log(parameters);
 
-    $rootScope.loadStockStatusSummary(parameters,false);
+        $rootScope.loadStockStatusSummary(parameters, false);
 
-    $rootScope.loadStockAvailableByLevel(parameters);
+        $rootScope.loadStockAvailableByLevel(parameters);
 
-     $rootScope.loadStockAvailableForPeriodData(parameters);
+        $rootScope.loadStockAvailableForPeriodData(parameters);
 
-     $rootScope.loadOnTimeDelivery(parameters);
+        $rootScope.loadOnTimeDelivery(parameters);
 
-     $rootScope.loadRnrPassedQualityCheckData(parameters);
+        $rootScope.loadRnrPassedQualityCheckData(parameters);
 
-     $rootScope.loadPercentageWastageData(parameters);
+        $rootScope.loadPercentageWastageData(parameters);
 
-     $rootScope.initializeRequisitionSummary(parameters);
+        $rootScope.initializeRequisitionSummary(parameters);
 
-      $rootScope.loadTimelinessReportingData(parameters);
+        $rootScope.loadTimelinessReportingData(parameters);
 
     }
 
@@ -261,9 +257,9 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         // if($scope.dashletSectionsLoaded.includes('requisition')) return;
 
         GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({
-                associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']
-            })
-            .then(function(data) {
+            associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']
+        })
+            .then(function (data) {
                 var chartId = 'trendOfEmergencyOrder';
                 var chartRegularId = 'trendOfRegualrOrder';
                 var category = _.pluck(data, 'ym');
@@ -275,7 +271,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
         GetPercentageOfEmergencyOrderByProgramData.get({
             associatedDashlets: ['percentageOfRegularOrders']
-        }).then(function(data) {
+        }).then(function (data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
             var category = _.pluck(data, 'Program Name');
@@ -287,14 +283,14 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
         RejectionCount.get({
             associatedDashlets: ['rejectedRnrTrends']
-        }, function(data) {
+        }, function (data) {
             var reject = _.pluck(data.rejections, 'Month');
             var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
             loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
         });
         GetPercentageOfEmergencyOrderByProgramData.get({
             associatedDashlets: ['percentageOrEmergencyOrders']
-        }).then(function(data) {
+        }).then(function (data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
             var category = _.pluck(data, 'Program Name');
@@ -306,7 +302,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
         GetEmergencyOrderByProgramData.get({
             associatedDashlets: ['emergencyOrderByProgram', 'regularOrderByProgram']
-        }).then(function(data) {
+        }).then(function (data) {
             var chartId = 'emergencySubmittedByProgram';
             var chartRegularId = 'regularSubmittedByProgram';
             var category = _.pluck(data, 'Program Name');
@@ -318,12 +314,12 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
         GetNumberOfEmergencyData.get({
             associatedDashlets: ['provincesWithMostRegularOrders']
-        }).then(function(data) {
+        }).then(function (data) {
             var chartId = 'emergencyByRegion';
             var data1 = _.pluck(data, 'Number Of EOs');
             var data2 = _.pluck(data, 'Province');
             var total = 0;
-            total = _.reduce(data1, function(memo, num) {
+            total = _.reduce(data1, function (memo, num) {
                 return memo + num;
             }, 0);
             var dataValues = _.zip(data2, data1);
@@ -339,107 +335,107 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                  $scope.facilitiesReportingViaCEAndFE = data.facilities;
          });*/
 
-      /*  DashboardRnrTypes.get({
-            zoneId: 437,
-            periodId: $scope.filter.period,
-            programId: $scope.filter.program,
-            associatedDashlets: ['regularAndEmergencyRequisition']
-        }, function(data) {
-            var rnrTypes = data.rnrTypes;
+        /*  DashboardRnrTypes.get({
+              zoneId: 437,
+              periodId: $scope.filter.period,
+              programId: $scope.filter.program,
+              associatedDashlets: ['regularAndEmergencyRequisition']
+          }, function(data) {
+              var rnrTypes = data.rnrTypes;
 
-            var periods = _.pluck(rnrTypes, 'period');
-            var series = [];
-            var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
-            var regularRnrs = _.pluck(rnrTypes, 'regular');
-            var percentages = _.pluck(rnrTypes, 'percent');
-            var emergencySeries = {
-                type: 'spline',
+              var periods = _.pluck(rnrTypes, 'period');
+              var series = [];
+              var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
+              var regularRnrs = _.pluck(rnrTypes, 'regular');
+              var percentages = _.pluck(rnrTypes, 'percent');
+              var emergencySeries = {
+                  type: 'spline',
 
-                name: 'Emergency',
-                data: emergencyRnrs
-            };
-            var regularSeries = {
-                type: 'spline',
+                  name: 'Emergency',
+                  data: emergencyRnrs
+              };
+              var regularSeries = {
+                  type: 'spline',
 
-                name: 'Regular',
-                data: regularRnrs
-            };
-            var percentSeries = {
-                type: 'column',
-                yAxis: 1,
-                name: 'Percent',
-                data: percentages
-            };
+                  name: 'Regular',
+                  data: regularRnrs
+              };
+              var percentSeries = {
+                  type: 'column',
+                  yAxis: 1,
+                  name: 'Percent',
+                  data: percentages
+              };
 
-            series.push(regularSeries);
-            series.push(emergencySeries);
-            series.push(percentSeries);
-            Highcharts.chart('regularEmergencyType', {
+              series.push(regularSeries);
+              series.push(emergencySeries);
+              series.push(percentSeries);
+              Highcharts.chart('regularEmergencyType', {
 
-                chart: {
-                    type: 'line',
-                    zoomType: 'xy'
-                },
-                exporting: {
-                    enabled: false
-                },
-                title: {
-                    text: ''
-                },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    categories: periods
-                },
-                yAxis: [{ // Primary yAxis [{ // Primary yAxis
-                    labels: {
-                        format: '{value}',
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
-                    },
-                    title: {
-                        text: 'Quantity',
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
-                    },
-                    opposite: false
+                  chart: {
+                      type: 'line',
+                      zoomType: 'xy'
+                  },
+                  exporting: {
+                      enabled: false
+                  },
+                  title: {
+                      text: ''
+                  },
+                  subtitle: {
+                      text: ''
+                  },
+                  xAxis: {
+                      categories: periods
+                  },
+                  yAxis: [{ // Primary yAxis [{ // Primary yAxis
+                      labels: {
+                          format: '{value}',
+                          style: {
+                              color: Highcharts.getOptions().colors[2]
+                          }
+                      },
+                      title: {
+                          text: 'Quantity',
+                          style: {
+                              color: Highcharts.getOptions().colors[2]
+                          }
+                      },
+                      opposite: false
 
-                }, { // Secondary yAxis
-                    gridLineWidth: 0,
-                    title: {
-                        text: 'Percentage',
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
+                  }, { // Secondary yAxis
+                      gridLineWidth: 0,
+                      title: {
+                          text: 'Percentage',
+                          style: {
+                              color: Highcharts.getOptions().colors[0]
+                          }
 
-                    },
-                    labels: {
-                        format: '{value} %',
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
-                    },
-                    opposite: true
+                      },
+                      labels: {
+                          format: '{value} %',
+                          style: {
+                              color: Highcharts.getOptions().colors[0]
+                          }
+                      },
+                      opposite: true
 
-                }],
-                tooltip: {
-                    shared: true
-                },
-                plotOptions: {
-                    line: {
-                        dataLabels: {
-                            enabled: true
-                        },
-                        enableMouseTracking: false
-                    }
-                },
-                series: series
-            });
+                  }],
+                  tooltip: {
+                      shared: true
+                  },
+                  plotOptions: {
+                      line: {
+                          dataLabels: {
+                              enabled: true
+                          },
+                          enableMouseTracking: false
+                      }
+                  },
+                  series: series
+              });
 
-        });*/
+          });*/
 
         /*     RnRStatusSummary.get({
                          zoneId: 437,
@@ -523,11 +519,299 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                      });*/
 
 
+    }
+
+    function loadRAndRTrackingSection() {
+
+        GetPendingWorkloadData.get({
+            associatedDashlets: ['pendingWorkloadReport']
+        }).then( function (data) {
+            var chartId = 'pendingWorkload';
+            var category = _.pluck(data, 'status');
+            var value = _.pluck(data, 'count');
+            loadTheChart(category, value, chartId, 'column', 'R&R', '', '# of requisitions');
+        });
+
+        // GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({
+        //     associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']
+        // })
+        //     .then(function (data) {
+        //         var chartId = 'trendOfEmergencyOrder';
+        //         var chartRegularId = 'trendOfRegualrOrder';
+        //         var category = _.pluck(data, 'ym');
+        //         var value = _.pluck(data, 'Emergency Requisitions');
+        //         var valueRegular = _.pluck(data, 'Regular Requisitions');
+        //         loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
+        //         loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
+        //     });
+        //
+        //
+        // GetPercentageOfEmergencyOrderByProgramData.get({
+        //     associatedDashlets: ['pendingWorkloadReport']
+        // }).then(function (data) {
+        //     var chartId = 'pendingWorkload';
+        //     var chartRegularId = 'regularByProgram';
+        //     var category = _.pluck(data, 'Program Name');
+        //     var value = _.pluck(data, 'Emergency');
+        //     var valueRegular = _.pluck(data, 'Regular');
+        //     loadTheChart(category, value, chartId, 'column', 'R&R', '', '# of requisitions');
+        //     // loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        // });
+        //
+        // GetPercentageOfEmergencyOrderByProgramData.get({
+        //     associatedDashlets: ['percentageOfRegularOrders']
+        // }).then(function (data) {
+        //     console.log('regularByProgramData:: ', data)
+        //     var chartId = 'emergencyByProgram';
+        //     var chartRegularId = 'regularByProgram';
+        //     var category = _.pluck(data, 'Program Name');
+        //     var value = _.pluck(data, 'Emergency');
+        //     var valueRegular = _.pluck(data, 'Regular');
+        //     loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+        //     loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        // });
+        //
+        // RejectionCount.get({
+        //     associatedDashlets: ['rejectedRnrTrends']
+        // }, function (data) {
+        //     var reject = _.pluck(data.rejections, 'Month');
+        //     var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
+        //     loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
+        // });
+        // GetPercentageOfEmergencyOrderByProgramData.get({
+        //     associatedDashlets: ['percentageOrEmergencyOrders']
+        // }).then(function (data) {
+        //     var chartId = 'emergencyByProgram';
+        //     var chartRegularId = 'regularByProgram';
+        //     var category = _.pluck(data, 'Program Name');
+        //     var value = _.pluck(data, 'Emergency');
+        //     var valueRegular = _.pluck(data, 'Regular');
+        //     loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+        //     loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        // });
+        //
+        // GetEmergencyOrderByProgramData.get({
+        //     associatedDashlets: ['emergencyOrderByProgram', 'regularOrderByProgram']
+        // }).then(function (data) {
+        //     var chartId = 'emergencySubmittedByProgram';
+        //     var chartRegularId = 'regularSubmittedByProgram';
+        //     var category = _.pluck(data, 'Program Name');
+        //     var value = _.pluck(data, 'Emergency');
+        //     var valueRegular = _.pluck(data, 'Regular');
+        //     loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+        //     loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        // });
+        //
+        // GetNumberOfEmergencyData.get({
+        //     associatedDashlets: ['provincesWithMostRegularOrders']
+        // }).then(function (data) {
+        //     var chartId = 'emergencyByRegion';
+        //     var data1 = _.pluck(data, 'Number Of EOs');
+        //     var data2 = _.pluck(data, 'Province');
+        //     var total = 0;
+        //     total = _.reduce(data1, function (memo, num) {
+        //         return memo + num;
+        //     }, 0);
+        //     var dataValues = _.zip(data2, data1);
+        //     loadPieChart(chartId, dataValues, total);
+        // });
+        //
+        //
+        //  EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
+        //          $scope.emergencyOrderFrequentAppearingProducts = data.products;
+        //  });
+        //
+        // /* FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
+        //          $scope.facilitiesReportingViaCEAndFE = data.facilities;
+        //  });*/
+        //
+        // /*  DashboardRnrTypes.get({
+        //       zoneId: 437,
+        //       periodId: $scope.filter.period,
+        //       programId: $scope.filter.program,
+        //       associatedDashlets: ['regularAndEmergencyRequisition']
+        //   }, function(data) {
+        //       var rnrTypes = data.rnrTypes;
+        //
+        //       var periods = _.pluck(rnrTypes, 'period');
+        //       var series = [];
+        //       var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
+        //       var regularRnrs = _.pluck(rnrTypes, 'regular');
+        //       var percentages = _.pluck(rnrTypes, 'percent');
+        //       var emergencySeries = {
+        //           type: 'spline',
+        //
+        //           name: 'Emergency',
+        //           data: emergencyRnrs
+        //       };
+        //       var regularSeries = {
+        //           type: 'spline',
+        //
+        //           name: 'Regular',
+        //           data: regularRnrs
+        //       };
+        //       var percentSeries = {
+        //           type: 'column',
+        //           yAxis: 1,
+        //           name: 'Percent',
+        //           data: percentages
+        //       };
+        //
+        //       series.push(regularSeries);
+        //       series.push(emergencySeries);
+        //       series.push(percentSeries);
+        //       Highcharts.chart('regularEmergencyType', {
+        //
+        //           chart: {
+        //               type: 'line',
+        //               zoomType: 'xy'
+        //           },
+        //           exporting: {
+        //               enabled: false
+        //           },
+        //           title: {
+        //               text: ''
+        //           },
+        //           subtitle: {
+        //               text: ''
+        //           },
+        //           xAxis: {
+        //               categories: periods
+        //           },
+        //           yAxis: [{ // Primary yAxis [{ // Primary yAxis
+        //               labels: {
+        //                   format: '{value}',
+        //                   style: {
+        //                       color: Highcharts.getOptions().colors[2]
+        //                   }
+        //               },
+        //               title: {
+        //                   text: 'Quantity',
+        //                   style: {
+        //                       color: Highcharts.getOptions().colors[2]
+        //                   }
+        //               },
+        //               opposite: false
+        //
+        //           }, { // Secondary yAxis
+        //               gridLineWidth: 0,
+        //               title: {
+        //                   text: 'Percentage',
+        //                   style: {
+        //                       color: Highcharts.getOptions().colors[0]
+        //                   }
+        //
+        //               },
+        //               labels: {
+        //                   format: '{value} %',
+        //                   style: {
+        //                       color: Highcharts.getOptions().colors[0]
+        //                   }
+        //               },
+        //               opposite: true
+        //
+        //           }],
+        //           tooltip: {
+        //               shared: true
+        //           },
+        //           plotOptions: {
+        //               line: {
+        //                   dataLabels: {
+        //                       enabled: true
+        //                   },
+        //                   enableMouseTracking: false
+        //               }
+        //           },
+        //           series: series
+        //       });
+        //
+        //   });*/
+        //
+        // /*     RnRStatusSummary.get({
+        //                  zoneId: 437,
+        //                  periodId: $scope.filter.period,
+        //                  programId: $scope.filter.program,
+        //                  associatedDashlets: ['rnrStatusSummary']
+        //              },
+        //              function (data) {
+        //
+        //                  var dataValues = [];
+        //                  var colors = {
+        //                      'RELEASED': 'lightblue',
+        //                      'IN_APPROVAL': 'lightgreen',
+        //                      'APPROVED': '#82A4EF',
+        //                      'AUTHORIZED': '#FF558F'
+        //                  };
+        //                  data.rnrStatus.forEach(function (d) {
+        //                      if (d.status === 'AUTHORIZED')
+        //                          dataValues.push({
+        //                              sliced: true,
+        //                              selected: true,
+        //                              'name': messageService.get('label.rnr.status.summary.' + d.status),
+        //                              'y': d.totalStatus,
+        //                              color: colors[d.status]
+        //                          });
+        //                      else
+        //                          dataValues.push({
+        //                              'name': messageService.get('label.rnr.status.summary.' + d.status),
+        //                              'y': d.totalStatus,
+        //                              color: colors[d.status]
+        //                          });
+        //                  });
+        //
+        //                //  $scope.loadRnRStatusSummary(dataValues);
+        //                  $scope.total = 0;
+        //                  $scope.RnRStatusPieChartData = [];
+        //                  $scope.dataRows = [];
+        //                  $scope.datarows = [];
+        //
+        //                  console.log($scope.filter);
+        //
+        //                  if (!isUndefined(data.rnrStatus)) {
+        //
+        //                      $scope.dataRows = data.rnrStatus;
+        //                      if (isUndefined($scope.dataRows)) {
+        //                          $scope.message = 'No rnr status summary';
+        //                          return;
+        //                      }
+        //                      var statusData = _.pluck($scope.dataRows, 'status');
+        //                      var totalData = _.pluck($scope.dataRows, 'totalStatus');
+        //                      var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
+        //                      $scope.value = 0;
+        //                      for (var i = 0; i < $scope.dataRows.length; i++) {
+        //
+        //                          $scope.total += $scope.dataRows[i].totalStatus;
+        //
+        //                          var labelKey = 'label.rnr.status.summary.' + statusData[i];
+        //                          var label = messageService.get(labelKey);
+        //                          $scope.RnRStatusPieChartData[i] = {
+        //                              label: label,
+        //                              data: totalData[i],
+        //                              color: color[statusData[i]]
+        //
+        //                          };
+        //
+        //                      }
+        //                      $scope.rnrStatusPieChartOptionFunction();
+        //                      $scope.rnrStatusRenderedData = {
+        //                          status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
+        //
+        //                      };
+        //
+        //                    //  bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+        //                      //bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
+        //
+        //                  } else {
+        //                      $scope.message = 'No rnr status summary';
+        //                  }
+        //                  //$scope.overAllTotal();
+        //                //  $scope.paramsChanged($scope.tableParams);
+        //              });*/
+
 
     }
 
-
-    $scope.rnrStatusPieChartOptionFunction = function() {
+    $scope.rnrStatusPieChartOptionFunction = function () {
 
         $scope.rnRStatusPieChartOption = {
             series: {
@@ -537,7 +821,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                     label: {
                         show: true,
                         radius: 2 / 4,
-                        formatter: function(label, series) {
+                        formatter: function (label, series) {
                             return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
@@ -571,7 +855,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                         theme: {
                             fill: "#28A2F3"
                         },
-                        onclick: function() {
+                        onclick: function () {
                             $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
                         }
                     }
@@ -590,7 +874,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
     };
 
-    $scope.loadRnRStatusSummary = function(summary) {
+    $scope.loadRnRStatusSummary = function (summary) {
 
         var dataVal = [{
             name: 'Status',
@@ -623,7 +907,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                         theme: {
                             fill: "#28A2F3"
                         },
-                        onclick: function() {
+                        onclick: function () {
                             $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
                         }
                     }
@@ -649,7 +933,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
     $scope.dashletSectionsLoaded = [];
 
-    $scope.loadDashletsBySectionNames = function(sectionName) {
+    $scope.loadDashletsBySectionNames = function (sectionName) {
         switch (sectionName) {
             case 'stockStatus':
                 loadStockStatusSection();
@@ -658,8 +942,11 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                 loadRequisitionSection();
                 break;
             case 'kpi':
-                  loadKpiSection(params);
-                  break;
+                loadKpiSection(params);
+                break;
+            case 'tracking':
+                loadRAndRTrackingSection(params);
+                break;
             default:
                 console.log('Dashboard section does not exist');
         }
@@ -667,7 +954,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         sectionName && $scope.dashletSectionsLoaded.push(sectionName);
     };
 
-    $scope.sectionLoaded = function(section) {
+    $scope.sectionLoaded = function (section) {
         return $scope.dashletSectionsLoaded.includes(section);
     };
 
@@ -722,7 +1009,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                         theme: {
                             fill: "#28A2F3"
                         },
-                        onclick: function() {
+                        onclick: function () {
                             $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
                         }
                     }
@@ -775,7 +1062,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                             theme: {
                                 fill: "#28A2F3"
                             },
-                            onclick: function() {
+                            onclick: function () {
                                 $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
                             }
                         }
@@ -807,32 +1094,31 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     }
 
 
-
     $('ul.tabs').tabs().tabs('select_tab', 'tracer');
     $('.dropdown-trigger').dropdown();
 
-    $('li.dropdown.mega-dropdown').on('click', function(event) {
+    $('li.dropdown.mega-dropdown').on('click', function (event) {
         $(this).parent().toggleClass('open');
     });
 
-    $("dropdown-menu mega-dropdown-menu").click(function(e) {
+    $("dropdown-menu mega-dropdown-menu").click(function (e) {
         e.stopPropagation();
     });
 
-    $scope.stopPropagation = function(event, open) {
+    $scope.stopPropagation = function (event, open) {
 
         return event.stopPropagation();
     };
 
-    $scope.minimizePropagation = function(event, open) {
+    $scope.minimizePropagation = function (event, open) {
 
-     if($rootScope.stockIndicator === undefined) {
+        if ($rootScope.stockIndicator === undefined) {
 
-     $rootScope.stockIndicator  = 'so';
+            $rootScope.stockIndicator = 'so';
 
-     }
+        }
 
-     return 'dropdown-toggle';
+        return 'dropdown-toggle';
 
         /*
          $("dropdown-toggle").click(function() {
@@ -845,7 +1131,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-    $scope.toggled = function(open) {
+    $scope.toggled = function (open) {
 
         $scope.open = true;
         var child = $scope.$$childHead;
@@ -857,10 +1143,9 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
             child = child.$$nextSibling;
         }
     };
-    $("li.show > a").click(function() {
+    $("li.show > a").click(function () {
         $("li.hide").fadeToggle();
     });
-
 
 
     $rootScope.parameters = params;
@@ -871,7 +1156,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
     function loadIndexStockAvailability() {
 
-        IndexOfAluStockAvailabilityData.get(params).then(function(data) {
+        IndexOfAluStockAvailabilityData.get(params).then(function (data) {
 
             var value1 = ['Facilities with 1 Presentation', data[0].total];
             var value2 = ['Facilities with 2 Presentation', data[1].total];
@@ -887,19 +1172,17 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     }
 
 
-
-
     //Start of Map
 
     $scope.geojson = {};
 
     $scope.default_indicator = "period_over_expected";
 
-    $scope.expectedFilter = function(item) {
+    $scope.expectedFilter = function (item) {
         return item.expected > 0;
     };
 
-    $scope.style = function(feature) {
+    $scope.style = function (feature) {
         if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
             $scope.indicator_type = $scope.filter.indicator_type;
         } else {
@@ -917,7 +1200,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         };
     };
 
-    $scope.drawMap = function(json) {
+    $scope.drawMap = function (json) {
 
         angular.extend($scope, {
             geojson: {
@@ -933,7 +1216,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     function getExportDataFunction(features) {
 
         var arr = [];
-        angular.forEach(features, function(value, key) {
+        angular.forEach(features, function (value, key) {
             if (value.expected > 0) {
                 var percentage = {
                     'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'
@@ -943,8 +1226,6 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });
         $scope.exportData = arr;
     }
-
-
 
 
     /*
@@ -1084,10 +1365,8 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     $scope.zoomMap();*/
 
 
-
-
-    $scope.centerJSON = function() {
-        leafletData.getMap().then(function(map) {
+    $scope.centerJSON = function () {
+        leafletData.getMap().then(function (map) {
 
 
             var latlngs = [];
@@ -1118,28 +1397,27 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });
 
 
-
     };
 
     $scope.filter = params;
 
     initiateMap($scope);
 
-    $scope.onDetailClicked = function(feature) {
+    $scope.onDetailClicked = function (feature) {
 
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
     };
 
 
-    $scope.OnFilterChanged = function() {
+    $scope.OnFilterChanged = function () {
 
 
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
 
             $scope.features = data.map;
             getExportDataFunction($scope.features);
-            angular.forEach($scope.features, function(feature) {
+            angular.forEach($scope.features, function (feature) {
                 feature.geometry_text = feature.geometry;
                 feature.geometry = JSON.parse(feature.geometry);
                 feature.type = "Feature";
@@ -1148,7 +1426,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                 feature.properties.id = feature.id;
             });
 
-                  //    console.log(JSON.stringify($scope.features));
+            //    console.log(JSON.stringify($scope.features));
 
 
             $scope.drawMap({
@@ -1166,7 +1444,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-    $scope.loadMap = function(params) {
+    $scope.loadMap = function (params) {
         $scope.filter = params;
         initiateMap($scope);
         $scope.OnFilterChanged();
@@ -1180,9 +1458,9 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     */
 
     $scope.consumptionTrends = [];
-    $scope.loadConsumptionTrendsData = function(params) {
+    $scope.loadConsumptionTrendsData = function (params) {
 
-        ConsumptionTrendsData.get(params).then(function(data) {
+        ConsumptionTrendsData.get(params).then(function (data) {
 
             var groupA = _.where(data, {
                 'schedule': 45
@@ -1219,8 +1497,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-
-    $scope.loadStockStatusByProgram = function(params, level) {
+    $scope.loadStockStatusByProgram = function (params, level) {
         var stockSummary = [];
         var getPromiseData = (level === 'level1') ? StockStatusByProgramData : DashboardStockStatusSummaryData;
         var chartId = (level === 'level1') ? 'stock-by-program-and-period' : 'stockStatusOverTime';
@@ -1237,14 +1514,13 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });*/
 
 
-
         var params2 = {
             product: parseInt(2434, 0),
             year: parseInt(2018, 0),
             program: parseInt(1, 0),
             period: parseInt(75, 10)
         };
-        getPromiseData.get(params).then(function(data) {
+        getPromiseData.get(params).then(function (data) {
 
             $scope.stockStatuses = [];
             if (!isUndefined(data)) {
@@ -1252,11 +1528,11 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                 stockSummary = data;
                 var category = _.uniq(_.pluck(stockSummary, 'period'));
 
-                var groupBySchedule = _.groupBy(stockSummary, function(schedule) {
+                var groupBySchedule = _.groupBy(stockSummary, function (schedule) {
                     return schedule.schedule;
                 });
 
-                _.map(groupBySchedule, function(groupedData, index) {
+                _.map(groupBySchedule, function (groupedData, index) {
 
                     chartId = 'stock-by-program-and-period.' + index[index.length - 1];
                     var category = _.uniq(_.pluck(groupedData, 'period'));
@@ -1270,8 +1546,6 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                 });
 
 
-
-
             }
 
 
@@ -1281,7 +1555,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-    $rootScope.drawTheChart = function(stockSummary, chartId, title, category, level, name) {
+    $rootScope.drawTheChart = function (stockSummary, chartId, title, category, level, name) {
 
 
         var so = _.pluck(stockSummary, 'so');
@@ -1299,7 +1573,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         var totalUnknown = [];
         var totalSufficientStock = [];
 
-        _.map(total, function(data, index) {
+        _.map(total, function (data, index) {
 
             totalZeroStock.push({
                 y: so[index],
@@ -1326,10 +1600,10 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });
 
         summaries = [{
-                name: 'Stocked Out',
-                data: totalZeroStock,
-                color: '#ff0d00'
-            },
+            name: 'Stocked Out',
+            data: totalZeroStock,
+            color: '#ff0d00'
+        },
             {
                 name: 'Understocked',
                 data: totalLowStock,
@@ -1359,9 +1633,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-
-
-    $scope.openStatusByProgramChart = function(dataV, title) {
+    $scope.openStatusByProgramChart = function (dataV, title) {
 
         Highcharts.chart('stock-by-program-and-period', {
             chart: {
@@ -1423,13 +1695,10 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });
 
 
-
     };
 
 
-
-
-    $rootScope.stockStatusesStackedColumnChart = function(id, chartType, title, category, yAxisTitle, data, level, name) {
+    $rootScope.stockStatusesStackedColumnChart = function (id, chartType, title, category, yAxisTitle, data, level, name) {
 
         Highcharts.chart(id, {
             chart: {
@@ -1496,7 +1765,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
                         theme: {
                             fill: "#28A2F3"
                         },
-                        onclick: function() {
+                        onclick: function () {
                             $rootScope.openDefinitionModal(level, name);
                         }
                     }
@@ -1514,12 +1783,10 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
         });
 
 
-
-
     };
 
 
-    $scope.consumptionTrendsChart = function(chartTypeId, data, category, tle_consumption, tld_consumption, dolutegravir_consumption, group) {
+    $scope.consumptionTrendsChart = function (chartTypeId, data, category, tle_consumption, tld_consumption, dolutegravir_consumption, group) {
 
         Highcharts.chart(chartTypeId, {
             chart: {
@@ -1566,9 +1833,7 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
     };
 
 
-
-
-    $scope.indexOfStockAvailable = function(dataV, title) {
+    $scope.indexOfStockAvailable = function (dataV, title) {
         new Highcharts.Chart({
             chart: {
                 type: 'pie',
@@ -1601,10 +1866,10 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
 AnalyticsFunction.resolve = {
 
-    YearFilteredData: function($q, $timeout, OperationYears) {
+    YearFilteredData: function ($q, $timeout, OperationYears) {
         var deferred = $q.defer();
-        $timeout(function() {
-            OperationYears.get({}, function(data) {
+        $timeout(function () {
+            OperationYears.get({}, function (data) {
                 deferred.resolve(data.years);
             }, {});
         }, 100);
@@ -1612,14 +1877,14 @@ AnalyticsFunction.resolve = {
     },
 
     notifications: function ($q, $timeout, GetNotificationList) {
-             var deferred = $q.defer();
-             $timeout(function () {
-                 GetNotificationList.get({program:1}, function (data) {
-                     deferred.resolve(data.notifications);
-                 }, {});
-             }, 100);
-             return deferred.promise;
-         }
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetNotificationList.get({program: 1}, function (data) {
+                deferred.resolve(data.notifications);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    }
 
 
 };

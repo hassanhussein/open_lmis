@@ -78,7 +78,7 @@
         <td>{{eq.manufacturer}}</td>
         <td>{{eq.model}}</td>
         <td>{{eq.energyType.name}}</td>
-        <td>{{eq.equipmentType.code}}</td>
+        <td>{{eq.equipmentType.name}}</td>
         <td><a href="" ng-click="showRelatedProducts(eq)">{{eq.relatedProducts.length}} related products</a></td>
         <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
       </tr>
