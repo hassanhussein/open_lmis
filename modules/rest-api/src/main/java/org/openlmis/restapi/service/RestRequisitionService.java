@@ -103,7 +103,7 @@ public class RestRequisitionService {
 
         updateClientFields(report, rnr);
         insertPatientQuantificationLineItems(report, rnr);
-
+        insertManualTestLineItems(report, rnr, userId);
         insertRnrSignatures(report, rnr, userId);
 
         rnr = requisitionService.submit(rnr);
@@ -241,6 +241,20 @@ public class RestRequisitionService {
             }));
             rnr.setRnrSignatures(rnrSignatures);
             requisitionService.insertRnrSignatures(rnr);
+        }
+    }
+
+    private void insertManualTestLineItems(Report report, Rnr rnr, final Long userId) {
+        if (report.getManualTestLineItems() != null && !report.getManualTestLineItems().isEmpty()) {
+            List<ManualTestesLineItem> manualTestesLineItems = new ArrayList<>(CollectionUtils.collect(report.getManualTestLineItems(), new Transformer() {
+                @Override
+                public Object transform(Object input) {
+                    ((ManualTestesLineItem) input).setCreatedBy(userId);
+                    ((ManualTestesLineItem) input).setModifiedBy(userId);
+                    return input;
+                }
+            }));
+
         }
     }
 

@@ -19,10 +19,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Signature;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.utils.DateUtil;
-import org.openlmis.rnr.domain.PatientQuantificationLineItem;
-import org.openlmis.rnr.domain.RegimenLineItem;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +61,7 @@ public class Report {
   private Date periodStartDate;
 
   private List<Signature> rnrSignatures;
-
+  private List<ManualTestesLineItem> manualTestLineItems = new ArrayList<>();
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.mandatory.fields.missing");
