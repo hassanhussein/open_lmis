@@ -52,7 +52,7 @@ public interface StockCardMapper {
 
   @Select("SELECT *" +
       " FROM stock_cards" +
-          " WHERE facilityid = #{facilityId} and totalQuantityOnHand > 0 order by productId")
+          " WHERE facilityid = #{facilityId}  order by productId")
   @Results({
       @Result(property = "id", column = "id"),
       @Result(property = "product", column = "productId", javaType = Product.class,
@@ -91,9 +91,12 @@ public interface StockCardMapper {
           " WHERE stockcardentryid = #{stockCardEntryId}")
   List<StockCardEntryKV> getEntryKeyValues(@Param("stockCardEntryId")Long stockCardEntryId);
 
-  @Select("SELECT DISTINCT ON (loh.lotId) loh.*" +
-          " FROM lots_on_hand loh" +
-          " WHERE loh.stockcardid = #{stockCardId} ")
+  @Select("SELECT DISTINCT ON (loh.lotId) loh.*,  ((coalesce((select sum(quantity) from stock_card_entries lt where  lotonhandid=loh.id and lt.type='CREDIT') +coalesce((select sum(quantity) from stock_card_entries lt where lotonhandid=loh.id and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from stock_card_entries lt    \n" +
+          "                                             where  lotonhandid=loh.id and lt.type='DEBIT'),0),0)))    \n" +
+          "                                               totalQuantityOnHand  \n" +
+          "           FROM lots_on_hand loh \n" +
+          "           WHERE loh.stockcardid = #{stockCardId}" )
+
   @Results({@Result(property = "lotId", column = "lotId"),
       @Result(
           property = "keyValues", column = "id", javaType = List.class,
