@@ -15,7 +15,6 @@ package org.openlmis.ivdform.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
 import org.openlmis.ivdform.domain.RequisitionForm;
 import org.openlmis.ivdform.domain.RequisitionProductForm;
 import org.openlmis.ivdform.domain.reports.DiseaseLineItem;
@@ -30,7 +29,7 @@ import java.util.List;
 public interface IvdFormMapper {
     @Insert("INSERT INTO vaccine_order_requisitions (periodId,programId,status,supervisoryNodeId,facilityId,orderDate," +
             " createdBy, createdDate,modifiedBy,modifiedDate,emergency,reason,requestNumber)    " +
-            "VALUES (#{periodId},#{programId},#{status},#{supervisoryNodeId},#{facilityId},#{requestedDeliveryDateTime}," +
+            "VALUES (#{periodId},#{programId},'TIMR',#{supervisoryNodeId},#{facilityId},#{requestedDeliveryDateTime}," +
             "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency},#{description},#{orderId})")
     @Options(useGeneratedKeys = true)
     Long saveRequisition(RequisitionForm requisitionGroup);

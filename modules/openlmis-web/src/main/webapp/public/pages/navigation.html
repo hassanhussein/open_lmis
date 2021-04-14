@@ -393,26 +393,8 @@
                     </li>
 
 
-                    <li class="has-children" ng-show="hasPermission('WMS_MANAGE_STOCK')">
-                        <a href="javascript: void(0)">Reports</a>
-                        <div class="submenu">
-                            <ul>
-
-
-
-                                <li>
-                                    <a href="/public/pages/reports/wms-reports/index.html#/distribution"> Distribution Report</a>
-
-                                </li>
-
-                                <li><a href="/public/pages/reports/wms-reports/index.html#/reports" openlmis-message="link.others"></a>
-
-
-
-                            </ul>
-
-                        </div>
-
+                    <li ng-show="hasPermission('WMS_MANAGE_STOCK')">
+                        <a href="/public/pages/warehouse-management/reports/index.html#/list">Reports</a>
 
                     </li>
 

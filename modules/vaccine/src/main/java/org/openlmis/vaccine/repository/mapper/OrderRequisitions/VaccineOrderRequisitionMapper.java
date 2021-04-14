@@ -10,7 +10,6 @@ import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisiti
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.openlmis.vaccine.dto.VaccineOnTimeInFullDTO;
-import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -92,7 +91,7 @@ public interface VaccineOrderRequisitionMapper {
             "     JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
             "     JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid " +
             "     JOIN processing_periods pp on r.periodId = pp.id " +
-            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING','ISSUED') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} order by r.id desc limit 20")
+            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} order by r.id desc limit 20")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
     @SelectProvider(type = VaccineOrderRequisitionMapper.SelectVaccineOrder.class, method = "getOrderBySearchParam")

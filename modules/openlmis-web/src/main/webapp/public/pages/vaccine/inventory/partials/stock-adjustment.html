@@ -67,7 +67,9 @@
                         openlmis-message="label.stock.physical.count"></span></th>
                 <th class="col-count"><span openlmis-message="label.stock.vvm"></span></th>
                 <th style="min-width:5px !important;width:10px !important" class="col-skip"><span
-                        openlmis-message="label.skip"></span></th>
+                        openlmis-message="label.skip"></span>
+                    <input type="checkbox" ng-model="checkAll" ng-change="checkAllChanged()"/>
+                </th>
                 <th class="col-reason"><span openlmis-message="label.stock.adjustment.reasons"></span></th>
                 <th class="col-affected"><span openlmis-message="label.stock.amount.affected"></span></th>
                 <th class="col-validation"><span openlmis-message="label.stock.validation"></span></th>
