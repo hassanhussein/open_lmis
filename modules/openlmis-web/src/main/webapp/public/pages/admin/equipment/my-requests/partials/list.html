@@ -80,9 +80,11 @@
               <label for="findingForCurrentValue"><span>Findings</span></label>
             </div>
             <div class="span4">
-              <textarea ng-required="true" type="text"
-                        name="findingForCurrentValue" id="findingForCurrentValue"
-                        ng-model="currentRequest.maintenanceDetails.finding"></textarea>
+              <textarea
+                      ng-required="true" type="text"
+                      name="findingForCurrentValue" id="findingForCurrentValue"
+                      ng-model="currentRequest.maintenanceDetails.finding">
+              </textarea>
             </div>
           </div>
           <div class="row-fluid">
@@ -90,9 +92,11 @@
               <label for="servicePerformedValue"><span>Service Performed</span></label>
             </div>
             <div class="span4">
-              <textarea ng-required="true" type="text"
-                        name="servicePerformedValue" id="servicePerformedValue"
-                        ng-model="currentRequest.maintenanceDetails.servicePerformed"></textarea>
+              <textarea
+                      ng-required="true" type="text"
+                      name="servicePerformedValue" id="servicePerformedValue"
+                      ng-model="currentRequest.maintenanceDetails.servicePerformed">
+              </textarea>
             </div>
           </div>
 
@@ -101,9 +105,16 @@
               <label for="responseCommentValue"><span>Comment</span></label>
             </div>
             <div class="span4">
-              <textarea ng-required="true" type="text"
-                        name="responseCommentValue" id="responseCommentValue"
-                        ng-model="currentRequest.vendorComment"></textarea>
+              <textarea
+                      ng-required="true"
+                      type="text"
+                      name="responseCommentValue" id="responseCommentValue"
+                      ng-model="currentRequest.vendorComment">
+              </textarea>
+              <div data-ng-show="maintenanceRequestResponseForm.responseCommentValue.$touched && maintenanceRequestResponseForm.responseCommentValue.$invalid">
+                <small style="color: red; display: block; text-align: left">Please enter a valid commment</small>
+              </div>
+
             </div>
           </div>
           <div class="row-fluid">
@@ -120,6 +131,11 @@
                />
             </div>
           </div>
+          <input type="button"
+                 class="btn btn-primary save-button"
+                 value="Send email to requester"
+                 data-ng-disabled="maintenanceRequestResponseForm.$invalid"
+                 ng-click="saveResponse()"/>
         </div>
 
       </form>
@@ -127,8 +143,7 @@
     </div>
 
     <div class="modal-footer">
-      <input type="button" class="btn btn-primary save-button" value="Send email to requester"
-             ng-click="saveResponse()"/>
+
       <input type="button"
              ng-click="closeModal();error=''"
              class="btn btn-cancel" openlmis-message="button.cancel"/>
