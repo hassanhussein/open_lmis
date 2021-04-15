@@ -17,5 +17,6 @@ public class RejectedRnRReport implements ResultRow {
     private String regionName;
     private String zoneName;
     private String month_name;
+    private String all;
 
 }

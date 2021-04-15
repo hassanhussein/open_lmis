@@ -1362,8 +1362,8 @@ services.factory('GetDistrictCategorization', function ($resource) {
 services.factory('GetVaccineCoverageByRegionAndProduct', function ($resource) {
     return $resource('/vaccine/dashboard/VaccineCoverageByRegionAndProduct.json', {}, {});
 });
-services.factory('GetRejectedRnR', function ($resource) {
-    return $resource('/reports/getRejectedRnR.json', {}, {});
+services.factory('GetRejectedRnRsWithReason', function ($resource) {
+    return $resource('/reports/getRejectedRnRsWithReason.json', {}, {});
 });
 services.factory('GetVaccineNationalCoverage', function ($resource) {
     return $resource('/vaccine/dashboard/VaccineNationalCoverage.json', {}, {});

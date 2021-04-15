@@ -89,6 +89,7 @@ public class ReportLookupController extends BaseController {
   private static final String FACILITY_OPERATORS = "facilityOperators";
   private static final String FACILITY_LEVELS_WITHOUT_PROGRAM = "facility_levels_without_programs";
   private static final String OWNERS="owners";
+  private static final String REJECTED="Rejected";
 
   @Autowired
   private ReportLookupService reportLookupService;
@@ -673,5 +674,16 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response(ZONE, reportLookupService.getUserDistrict(program,loggedInUserId(request)));
 
   }
+
+
+  @RequestMapping(value = "/getRejectedRnRsWithReason", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getRejectedRnRsWithReason(@RequestParam("program") Long program,
+                                                          @RequestParam("period") Long period,
+                                                          @RequestParam(value = "page", required = true, defaultValue = "1") Integer page
+  ) {
+    return OpenLmisResponse.response(REJECTED, this.reportLookupService.getRejectedRnRsWithReason(program,period));
+
+  }
+
 
 }
