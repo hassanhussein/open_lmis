@@ -35,4 +35,17 @@ public interface RejectionRnRReportMapper {
             "                order by districtId, to_char(createdDate, 'yyyy_mm')")
     List<HashMap<String,Object>>getRnRRejected(@Param("status") String status,@Param("program")Long program, @Param("period")Long period,@Param("zone")String zone, RowBounds rowBounds);
 
+
+
+    @Select("select f.name as facilityName, rjs.name as reason, rc.name as rejectionCategory, district_name districtName,region_name as regionName,\n" +
+            "zone_name as zoneName from requisition_rejections rj\n" +
+            "join requisitions r on r.id = rj.rnrid\n" +
+            "join facilities f on f.id = r.facilityid\n" +
+            "join vw_districts d on d.district_id = f.geographiczoneid\n" +
+            "join programs p on p.id=r.programid\n" +
+            "join rejections rjs on rjs.id=rj.rejectionid\n" +
+            "join processing_periods pp on pp.id=r.periodid\n" +
+            "join rejection_categories rc on rc.id=rjs.rejectioncategoryid" +
+            " where r.programid =#{program} and periodId=#{period}")
+    List<HashMap<String,Object>> getRejectedRnRsWithReason(@Param("program")Long program, @Param("period")Long period);
 }

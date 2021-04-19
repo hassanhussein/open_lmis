@@ -1,17 +1,14 @@
 
-function RejectionByZoneControllerFunction($scope,$state,$stateParams,GetRejectedRnR) {
+function RejectionByZoneControllerFunction($scope,$state,$stateParams,GetRejectedRnRsWithReason) {
     "use strict";
     $scope.zone = $stateParams.zone;
 
-    GetRejectedRnR.get($stateParams,function (data) {
+    GetRejectedRnRsWithReason.get($stateParams,function (data) {
 
         if(data.length !==null){
-            $scope.rejects = data.rejected;
+            $scope.rejects = data.Rejected;
             $scope.pagination = data.pagination;
         }
-
-        console.log(JSON.stringify(data));
-
     });
 
 }
