@@ -775,6 +775,10 @@ public class ReportLookupService {
     return rejectionRnRReportMapper.getRnRRejected(status, program, period, zone, getPagination(page));
   }
 
+  public List<HashMap<String, Object>> getRejectedRnRsWithReason(Long program, Long period) {
+    return rejectionRnRReportMapper.getRejectedRnRsWithReason(program, period);
+  }
+
   public Pagination getPagination(Integer page) {
     int pageSize2 = 3000;
     return new Pagination(page, pageSize2);
