@@ -44,6 +44,7 @@ public class Report {
   private List<RnrLineItem> products;
   private List<RnrLineItem> nonFullSupplyProducts;
   private List<RegimenLineItem> regimens;
+  private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
   private List<PatientQuantificationLineItem> patientQuantifications;
 
   private String agentCode;
