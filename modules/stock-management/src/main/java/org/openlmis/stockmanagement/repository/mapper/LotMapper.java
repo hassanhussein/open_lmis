@@ -104,6 +104,7 @@ public interface LotMapper {
 
   @Update("UPDATE lots " +
       "SET lotNumber = #{lotCode}" +
+          ", productid = #{productId}" +
       ", manufacturerName = #{manufacturerName}" +
       ", manufactureDate = #{manufactureDate}" +
       ", expirationDate = #{expirationDate}" +
