@@ -20,15 +20,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "equipmentTypeName")
-@JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "coldChainEquipment"),
-        @JsonSubTypes.Type(value = Equipment.class, name = "equipment")
-})
+
 public class Equipment extends BaseDtoModel {
 
 
     private String name;
-    private EquipmentType equipmentType;
     private Long modelId;
     private Long equipmentTypeId;
     private String manufacturer;

@@ -57,6 +57,9 @@ public class DataChangeLogQueryBuilder {
         if (filter.getEndDate() != null) {
             WHERE("t.createddate::date <#{filterCriteria.endDate}::date");
         }
+        if (filter.getUuid() != null) {
+            WHERE("#{filterCriteria.uuid, typeHandler=org.openlmis.core.utils.UUIDTypeHandler}::UUID != t.uuid::UUID");
+        }
     }
 
     public static void predicateForTransactionDate(DataTransactionSearchParameter filter) {
