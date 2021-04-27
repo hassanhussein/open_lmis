@@ -80,7 +80,7 @@ public class VaccineInventoryReportQueryBuilder {
                 "(Select count(facilityid) from requisition_group_members where requisitiongroupid=rg.id) as expected,\n" +
                 "(SELECT COUNT(*) FROM (SELECT DISTINCT tofacilityid FROM vaccine_distributions where fromfacilityid=f.id and periodid=pp.id" +
                 "  and distributionDate >='" +startDate+ "' and distributionDate::DATE <= '"+endDate+ "'"+
-                " AND DISTRIBUTIONTYPE ='"+type+"'"
+                " AND DISTRIBUTIONTYPE ='"+type+"' or DISTRIBUTIONTYPE IS NULL"
                 +"   ) AS temp) as issued,\n" +
                 "f.id facilityid,\n" +
                 "pp.id periodid\n" +
