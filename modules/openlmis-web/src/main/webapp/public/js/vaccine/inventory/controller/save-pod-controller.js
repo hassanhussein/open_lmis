@@ -17,6 +17,7 @@ function SavePODController($scope,$location, $window,$timeout,StockEvent,SaveDis
               distribution.programId=$scope.userPrograms[0].id;
               distribution.status="RECEIVED";
               distribution.distributionType=$scope.facilityPOD.distributionType;
+              distribution.distributionDate=$scope.facilityPOD.distributionDate;
               distribution.lineItems=[];
               var events =[];
               $scope.facilityPOD.productsToIssueByCategory.forEach(function(category){
