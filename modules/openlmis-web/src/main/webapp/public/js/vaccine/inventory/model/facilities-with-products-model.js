@@ -28,6 +28,8 @@ var FacilitiesWithProducts = function (facility,stockCards,distributionForecastA
               this.distributionId=(facilityDistribution !== undefined)?facilityDistribution.id:undefined;
               this.toFacilityId=(facilityDistribution !== undefined)?facilityDistribution.toFacilityId:undefined;
               this.fromFacilityId=(facilityDistribution !== undefined)?facilityDistribution.fromFacilityId:undefined;
+              this.distributionType=(facilityDistribution !==undefined)?facilityDistribution.distributionType:undefined;
+
               this.currentPeriod=currentPeriod;
               this.equipments=report.status.equipments;
 

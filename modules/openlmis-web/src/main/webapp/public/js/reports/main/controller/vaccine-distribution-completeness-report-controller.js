@@ -51,6 +51,7 @@ function VaccineDistributionCompletenessReportController($scope, $routeParams, V
             function (data) {
                 $scope.dataR = [];
                 $scope.dataR = data.distributionCompleteness;
+
                 var d = $scope.dataR;
                 var arr = [];
                 angular.forEach(d, function (value, key) {
