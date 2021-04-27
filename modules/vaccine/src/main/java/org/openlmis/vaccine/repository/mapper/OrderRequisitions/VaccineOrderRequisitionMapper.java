@@ -49,7 +49,7 @@ public interface VaccineOrderRequisitionMapper {
 
     @Select("select * from vaccine_order_requisitions " +
             "   where " +
-            "   facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
+            "   facilityId = #{facilityId}  and programId = #{programId} order by id desc limit 1")
     VaccineOrderRequisition getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 

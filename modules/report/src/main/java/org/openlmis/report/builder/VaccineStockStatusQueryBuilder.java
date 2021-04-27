@@ -26,12 +26,15 @@ public class VaccineStockStatusQueryBuilder {
                         "    FROM  (                             " +
                         "    SELECT  facilityId, s.productId, f.name facilityName,district_id districtId, district_name district,region_id regionId, region_name region,  \n" +
                         "    p.primaryName product," +
-                                " sum(h.quantityOnHand) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
-                     //           " sum(e.quantity) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
-                        "    h.modifiedDate::timestamp lastUpdate   \n" +
+                                " sum(e.quantity) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
+                                " " +
+                             /*   "((coalesce((select sum(quantity) from stock_card_entries lt where  stockcardid=s.id and lt.type='CREDIT') +coalesce((select sum(quantity) from stock_card_entries lt where stockcardid=s.id and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from stock_card_entries lt   \n" +
+                                "                                                       where  stockcardid=s.id and lt.type='DEBIT'),0),0)))   \n" +
+                                "                                                       soh,    \n" +*/
+                        "    e.modifiedDate::timestamp lastUpdate   \n" +
                         "    FROM stock_cards s   \n" +
-                      //  "    JOIN stock_card_entries e ON e.stockCardId = s.id  " +
-                                " JOIN lots_on_hand h on s.id = h.stockCardId\n   \n" +
+                       "    JOIN stock_card_entries e ON e.stockCardId = s.id  " +
+                       //         " JOIN lots_on_hand h on s.id = h.stockCardId\n   \n" +
                         "    JOIN program_products pp ON s.productId = pp.productId    \n" +
                         "    JOIN programs ON pp.programId = programs.id    \n" +
                         "    JOIN products p ON pp.productId = p.id      \n" +
@@ -39,11 +42,11 @@ public class VaccineStockStatusQueryBuilder {
                         "    JOIN vw_districts d ON f.geographiczoneId = d.district_id  \n" +
                         "    JOIN facility_types  ON f.typeId = facility_types.Id   \n" +
                         "  " + writePredicates(filter) +
-                        "   AND h.QuantityOnHand > 0 AND d.district_id in (select district_id from vw_user_facilities where user_id = '" + userId + "'::INT and program_id = fn_get_vaccine_program_id())  "+
+                        "   AND d.district_id in (select district_id from vw_user_facilities where user_id = '" + userId + "'::INT and program_id = fn_get_vaccine_program_id())  "+
 
-                                "    ORDER BY h.modifiedDate ) t) x \n" +
+                                "    ORDER BY e.modifiedDate ) t) x \n" +
                         "    JOIN stock_requirements r on r.facilityid=x.facilityid and r.productid=x.productid\n" +
-                        "    WHERE  x.r <= 1 and r.year = (SELECT date_part('YEAR', #{filterCriteria.statusDate}::date ))         " +
+                        "    WHERE  x.r <= 1 and soh>0 and r.year = (SELECT date_part('YEAR', #{filterCriteria.statusDate}::date ))         " +
                         "    ORDER BY facilityId,productId )  \n" +
                         "    SELECT facilityId,districtId,regionId, productId, facilityName,district,region,product,lastUpdate,soh,isaValue,bufferStock,   \n" +
                         "    CASE WHEN isaValue > 0 THEN  ROUND((soh::numeric(10,2) / isaValue::numeric(10,2)),2) else 0 end as mos,color, adequacy," +
@@ -60,7 +63,7 @@ public class VaccineStockStatusQueryBuilder {
         String predicate = " ";
 
         predicate += " where programs.id = fn_get_vaccine_program_id()";
-        predicate += " and h.modifiedDate::DATE <= #{filterCriteria.statusDate}::date";
+        predicate += " and e.modifiedDate::DATE <= #{filterCriteria.statusDate}::date";
         predicate += " and pp.productCategoryId = " + params.getProductCategory();
         predicate += " and facilityId = ANY (#{filterCriteria.facilityIds}::INT[])";
 
