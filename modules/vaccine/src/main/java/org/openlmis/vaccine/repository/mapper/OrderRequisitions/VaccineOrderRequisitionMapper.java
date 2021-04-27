@@ -91,7 +91,7 @@ public interface VaccineOrderRequisitionMapper {
             "     JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
             "     JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid " +
             "     JOIN processing_periods pp on r.periodId = pp.id " +
-            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} order by r.id desc limit 40")
+            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} order by r.id desc")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
     @SelectProvider(type = VaccineOrderRequisitionMapper.SelectVaccineOrder.class, method = "getOrderBySearchParam")
