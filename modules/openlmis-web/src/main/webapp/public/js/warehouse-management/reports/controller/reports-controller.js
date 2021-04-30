@@ -15,8 +15,6 @@ $scope.getYears=function(){
 OperationYears.get(function (data) {
                     $scope.years = data.years;
 
-                    console.log($scope.years)
-
                 });
 
 }

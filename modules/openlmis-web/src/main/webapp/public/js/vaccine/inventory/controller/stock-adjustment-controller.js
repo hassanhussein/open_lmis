@@ -212,8 +212,6 @@ function checkUncheck(check){
     $scope.checkAllChanged=function(){
     if($scope.checkAll){
     checkUncheck(true);
-    console.log($scope.stockCardsToDisplay)
-    console.log('its checked');
     }else{
        checkUncheck(false);
     }

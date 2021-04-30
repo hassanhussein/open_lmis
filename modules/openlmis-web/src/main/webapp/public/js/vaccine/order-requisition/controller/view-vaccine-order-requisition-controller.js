@@ -31,7 +31,6 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
             programId: parseInt(program[0].id, 10)
         }, function (data) {
 
-        console.log(data)
             $scope.pendingRequisition = data.pendingRequest;
             $scope.numberOfPages = Math.ceil($scope.pendingRequisition.length / $scope.pageSize) || 1;
             $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;

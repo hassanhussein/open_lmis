@@ -11,7 +11,6 @@ function SavePODController($scope,$location, $window,$timeout,StockEvent,SaveDis
 
      $scope.updatePOD=function(){
               var distribution={};
-              console.log($scope.facilityPOD)
               distribution.id=$scope.facilityPOD.distributionId;
               distribution.toFacilityId=$scope.facilityPOD.id;
               distribution.programId=$scope.userPrograms[0].id;

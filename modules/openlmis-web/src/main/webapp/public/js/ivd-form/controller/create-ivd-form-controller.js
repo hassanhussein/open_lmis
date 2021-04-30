@@ -17,7 +17,7 @@ $scope.disableInputs=function(dose){
 //disable V020,V017 adn MR2
 
     return dose.product.code==='V020' || dose.product.code==='V017' ||(dose.product.code==='V009' && dose.doseId===2);
-}
+};
   // initial state of the display
   $scope.report = new VaccineReport(report);
   console.log($scope.report);
