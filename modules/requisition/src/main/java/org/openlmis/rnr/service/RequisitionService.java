@@ -233,6 +233,10 @@ public class RequisitionService {
         requisition.setManualTestLineItems(generatedManualTestLineItem);
     }
 
+    public List<ManualTestesLineItem> getManualTestesLineItemList(Long rnrId) {
+        return requisitionRepository.getManualTestesLineItemList(rnrId);
+    }
+
     private void populateAllocatedBudget(Rnr requisition) {
         if (requisition.isBudgetingApplicable()) {
             BudgetLineItem budgetLineItem = budgetLineItemService.get(requisition.getFacility().getId(), requisition.getProgram().getId(), requisition.getPeriod().getId());

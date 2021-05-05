@@ -158,6 +158,7 @@ public class RestRequisitionService {
 
         List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
         List<RnrLineItem> nonFullSupplyProducts = new ArrayList<>();
+        List<ManualTestesLineItem> manualTestesLineItemList = new ArrayList<>();
 
         fullSupplyFacilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
         nonFullSupplyFacilityApprovedProducts = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
@@ -172,6 +173,7 @@ public class RestRequisitionService {
         nonFullSupplyProducts = report.getProducts().stream()
                 .filter(p -> nonFullSupplyProductCodes.contains(p.getProductCode()))
                 .collect(Collectors.toList());
+        manualTestesLineItemList = report.getManualTestLineItems();
 
         for (RnrLineItem li : nonFullSupplyProducts) {
             setNonFullSupplyCreatorFields(li);
@@ -186,6 +188,7 @@ public class RestRequisitionService {
 
 
         copyRegimens(rnr, report);
+        insertManualTestLineItems(report, rnr, userId);
         // if you have come this far, then do it, it is your day. make the submission.
         // i cannot believe we do all of these three at the same time.
         // but then this is what zambia specifically asked.
@@ -245,17 +248,30 @@ public class RestRequisitionService {
     }
 
     private void insertManualTestLineItems(Report report, Rnr rnr, final Long userId) {
+        List<ManualTestesLineItem> savedManualTestesLineItemList = requisitionService.getManualTestesLineItemList(rnr.getId());
         if (report.getManualTestLineItems() != null && !report.getManualTestLineItems().isEmpty()) {
             List<ManualTestesLineItem> manualTestesLineItems = new ArrayList<>(CollectionUtils.collect(report.getManualTestLineItems(), new Transformer() {
                 @Override
                 public Object transform(Object input) {
+                    ManualTestesLineItem item= findManualTestesLineItem( ((ManualTestesLineItem) input).getTestTypeId(),savedManualTestesLineItemList);
+                    ((ManualTestesLineItem) input).setId(item.getId());
+                    ((ManualTestesLineItem) input).setRnrId(item.getRnrId());
                     ((ManualTestesLineItem) input).setCreatedBy(userId);
                     ((ManualTestesLineItem) input).setModifiedBy(userId);
                     return input;
                 }
             }));
-
+            rnr.setManualTestLineItems(manualTestesLineItems);
         }
+
+    }
+
+    private static ManualTestesLineItem findManualTestesLineItem(Integer testTypeId, List<ManualTestesLineItem> testesLineItems) {
+        List<ManualTestesLineItem> filteredList = testesLineItems.stream()
+                .filter(t -> t.getTestTypeId().equals(testTypeId))
+                .collect(Collectors.toList());
+        return filteredList != null && !filteredList.isEmpty() ? filteredList.get(0) : null;
+
     }
 
     @Transactional
