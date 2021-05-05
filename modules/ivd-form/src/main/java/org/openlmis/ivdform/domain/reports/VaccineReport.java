@@ -46,6 +46,7 @@ public class VaccineReport extends BaseModel {
     private ProcessingPeriod period;
     private Facility facility;
     private String majorImmunizationActivities;
+    private Boolean lastActive=true;
 
     private Long fixedImmunizationSessions;
     private Long plannedOutreachImmunizationSessions;
