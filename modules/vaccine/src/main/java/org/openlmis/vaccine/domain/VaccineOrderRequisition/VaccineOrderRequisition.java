@@ -35,7 +35,6 @@ public class VaccineOrderRequisition extends BaseModel {
     private Long facilityId;
     private String orderDate;
     private boolean emergency;
-    private Boolean lastActive=true;
     private String reason;
     private List<VaccineOrderRequisitionLineItem> lineItems;
     private List<VaccineOrderRequisitionStatusChange> statusChanges;

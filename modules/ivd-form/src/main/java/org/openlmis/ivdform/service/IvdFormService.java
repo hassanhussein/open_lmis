@@ -355,9 +355,7 @@ public class IvdFormService {
         // find out which schedule this facility is in?
         Long scheduleId = repository.getScheduleFor(facilityId, programId);
         VaccineReport lastRequest = repository.getLastReport(facilityId, programId);
-        if(lastRequest != null&&!lastRequest.getLastActive()){
-            lastRequest=null;
-        }
+
         if (lastRequest != null) {
             lastRequest.setPeriod(periodService.getById(lastRequest.getPeriodId()));
             Date lastReportStartDate = lastRequest.getPeriod().getStartDate();
