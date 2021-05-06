@@ -202,6 +202,9 @@ public class VaccineOrderRequisitionService {
         Long scheduleId = orderRequisitionRepository.getScheduleFor(facilityId, programId);
         VaccineOrderRequisition lastRequest = orderRequisitionRepository.getLastOrder(facilityId, programId);
 
+        if(lastRequest != null&&!lastRequest.getLastActive()){
+            lastRequest=null;
+        }
         if (lastRequest != null) {
             lastRequest.setPeriod(periodService.getById(lastRequest.getPeriodId()));
             startDate = lastRequest.getPeriod().getStartDate();
