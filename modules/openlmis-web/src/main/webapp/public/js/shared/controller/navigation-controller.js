@@ -94,10 +94,10 @@ function NavigationController($scope, MetabaseMenus, metabaseNavService, ConfigS
 
     };
     $scope.loadTargetMenuList = function (target) {
- /*     return   $scope.metabaseMenuTree.filter( function (m,i,arr) {
+    return   $scope.metabaseMenuTree.filter( function (m,i,arr) {
           return m.name===target;
 
-      });*/
+      });
     };
 
     MetabaseMenus.get(function (data) {
