@@ -60,9 +60,6 @@ public class InteractiveReportController extends BaseController {
   private ReportPaginationHelper helper;
 
   @Autowired
-  private TestAsync testAsync;
-
-  @Autowired
   private AggregateConsumptionReportDataProvider aggregateConsumptionReportDataProvider;
 
   @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = BaseController.ACCEPT_JSON)
