@@ -12,11 +12,9 @@
 
 package org.openlmis.report.service;
 
-import javafx.util.Pair;
 import lombok.NoArgsConstructor;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
-import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.User;
 import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
 import org.openlmis.report.mapper.UserPermissionMapper;
