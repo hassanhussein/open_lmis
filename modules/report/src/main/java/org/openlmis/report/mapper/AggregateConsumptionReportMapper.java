@@ -38,4 +38,15 @@ public interface AggregateConsumptionReportMapper {
       @Param("canViewNationalReport") Boolean canViewNationalReport
   );
 
+
+  @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getQuery")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, timeout = 0, useCache = false,
+          flushCache = true)
+  public List<DistrictConsumptionReport> downloadAggregateConsumptionReport(
+          @Param("filterCriteria") ReportParameter filterCriteria,
+          @Param("SortCriteria") Map<String, String[]> sortCriteria,
+          @Param("userId") Long userId,
+          @Param("canViewNationalReport") Boolean canViewNationalReport
+  );
+
 }

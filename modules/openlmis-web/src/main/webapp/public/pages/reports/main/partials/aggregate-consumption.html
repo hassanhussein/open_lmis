@@ -22,18 +22,32 @@
         padding-right: 0px !important;
         padding-left: 0px !important;
     }
-    .button{
+
+    .button {
         color: #078f97 !important;
     }
-    btn-checkbox{
+
+    btn-checkbox {
         visibility: visible !important;
         color: #0c9083;
     }
 
-   /* .table td {
-         padding: 1px !important;
-    }*/
+    #myProgress {
+        width: 100%;
+        background-color: grey;
+    }
+
+    #myBar {
+        width: 1%;
+        height: 30px;
+        background-color: green;
+    }
+
+    /* .table td {
+          padding: 1px !important;
+     }*/
 </style>
+
 
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 
@@ -73,10 +87,10 @@
                             <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
 
 
-<!--
-                            <date-range-filter perioderror="error" startdate="filter.periodStart"
-                                               enddate="filter.periodEnd"
-                                               class="form-cell horizontalFilters"></date-range-filter>-->
+                            <!--
+                                                        <date-range-filter perioderror="error" startdate="filter.periodStart"
+                                                                           enddate="filter.periodEnd"
+                                                                           class="form-cell horizontalFilters"></date-range-filter>-->
 
                             <div class="form-cell horizontalFilters" style="padding-top: 20px;">
 
@@ -84,7 +98,8 @@
                                     <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
                                            ng-change="loadPaginatedData()"/>
 
-                                    <span  style="color:#078f97;" openlmis-message="label.report.view.disaggregated"></span>
+                                    <span style="color:#078f97;"
+                                          openlmis-message="label.report.view.disaggregated"></span>
                                 </label>
                             </div>
                             <div class="clearfix padding2px"></div>
@@ -107,8 +122,11 @@
                             </div>
                             <div class="clearfix padding2px"></div>
                             <div>
-    <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
- </span></div>
+                                <span class="pull-left"><a ng-click="downloadReport()" class="waves-effect waves-light btn">Download</a></span>
+                                <span class="pull-right"><a ng-click="searchReport()"
+                                                            class="waves-effect waves-light btn">Search</a></span>
+                                <br><br>
+                            </div>
 
                         </div>
                     </form>
@@ -132,7 +150,8 @@
                     <div ng-repeat="r in reportTypes">
                         <div class="form-cell span2">
                             <div class="checkbox">
-                                <label for="emergency"><input id="emergency" class="checkbox" type="checkbox" value="{{r.value}}"
+                                <label for="emergency"><input id="emergency" class="checkbox" type="checkbox"
+                                                              value="{{r.value}}"
                                                               ng-change="toggleSingle()" ng-checked="r.checked"
                                                               ng-model="r.checked">
                                     <span>{{r.label}}</span>
@@ -151,9 +170,10 @@
                     </tr>
                 </table>
                 <div ng-show="datarows.length > 0" client-side-sort-pagination>
-                    <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                    <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to
+                        {{ countFactor + pageSize }} of
                         {{totalItems}}
-                                                  <br/>
+                        <br/>
                     </div>
 
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
@@ -165,10 +185,10 @@
                             <td data-title="'#'" class="number" style="width:50px;">{{ row.no + countFactor}}</td>
 
 
-                           <!-- <td ng-hide="true" data-title="getLocalMessage('label.facility.code')"
-                                style="width:20% !important; padding: 0px !important;" sortable="facilityCode">{{ row.facilityCode
-                                }}
-                            </td>-->
+                            <!-- <td ng-hide="true" data-title="getLocalMessage('label.facility.code')"
+                                 style="width:20% !important; padding: 0px !important;" sortable="facilityCode">{{ row.facilityCode
+                                 }}
+                             </td>-->
                             <td ng-show="filter.disaggregated" data-title="getLocalMessage('label.facility')"
                                 style="width:50px" sortable="facility">{{ row.facility
                                 }}

@@ -48,7 +48,6 @@ public class AggregateConsumptionQueryBuilder {
 
   }
 
-
   public static String getDisAggregateSelect(AggregateConsumptionReportParam filter, Boolean canViewNationalReport) {
 
     BEGIN();
@@ -81,39 +80,39 @@ public class AggregateConsumptionQueryBuilder {
 
     WHERE(programIsFilteredBy("r.programId"));
     WHERE(periodIsFilteredBy("r.periodId"));
-    if(!canViewNationalReport)
-    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+    if (!canViewNationalReport)
+      WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
     WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
     WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));*/
 
-    if(filter.getProductCategory() != 0){
-      WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
+    if (filter.getProductCategory() != 0){
+      WHERE(productCategoryIsFilteredBy("ppg.productCategoryId"));
     }
 
-    if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
+    if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null){
       WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
     }
 
-    if (filter.getZone() != 0) {
-      WHERE( geoZoneIsFilteredBy("d") );
+    if (filter.getZone() != 0){
+      WHERE(geoZoneIsFilteredBy("d"));
     }
 
-    if (filter.getAllReportType()) {
+    if (filter.getAllReportType()){
       WHERE("r.emergency in (true,false)");
     } else {
       WHERE(reportTypeFilteredBy("r.emergency"));
     }
   }
 
-  public static String getQuery(Map params){
+  public static String getQuery(Map params) {
 
     AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
     Boolean canViewNationalReport = (Boolean) params.get("canViewNationalReport");
     if (filter.getDisaggregated())
-    return getDisAggregateSelect(filter, canViewNationalReport);
+      return getDisAggregateSelect(filter, canViewNationalReport);
     else
-     return getAggregateSelect(filter, canViewNationalReport);
+      return getAggregateSelect(filter, canViewNationalReport);
 
   }
 
