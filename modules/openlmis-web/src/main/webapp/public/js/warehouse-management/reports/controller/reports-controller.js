@@ -17,7 +17,7 @@ OperationYears.get(function (data) {
 
                 });
 
-}
+};
 
 $scope.getYears();
 
@@ -51,20 +51,20 @@ $scope.yearSelected=null;
  }
 
 
- }
+ };
 
   $scope.yearChanged=function(){
-    console.log($scope.yearSelected)
 
-     $scope.getMonths()
-   }
+
+     $scope.getMonths();
+   };
 
 $scope.getSites=function(){
 GetSiteList.get({}, function (data) {
-        $scope.sites=data.sites
+        $scope.sites=data.sites;
       });
 
-}
+};
 
 $scope.getSites();
 

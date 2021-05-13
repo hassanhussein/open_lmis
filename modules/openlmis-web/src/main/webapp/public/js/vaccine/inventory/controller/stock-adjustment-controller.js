@@ -215,7 +215,7 @@ function checkUncheck(check){
     }else{
        checkUncheck(false);
     }
-    }
+    };
 
       function reEvaluateTotalAdjustmentReasons()
       {
