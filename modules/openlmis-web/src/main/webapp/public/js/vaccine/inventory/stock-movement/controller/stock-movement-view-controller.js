@@ -45,6 +45,8 @@ console.log($routeParams);
                 $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) || 1;
                 $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
                 $scope.stockCardsByCategory = $scope.pageLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+                console.log($scope.stockCardsByCategory);
+
             });
         }
 
@@ -60,6 +62,7 @@ console.log($routeParams);
     $scope.$on('$routeUpdate', function () {
         refreshPageLineItems();
     });
+
 
 
     $scope.sumLots = function (c) {
@@ -170,7 +173,7 @@ console.log($routeParams);
                                          lot.vvmStatus=l.customProps.vvmstatus;
                                        }
                                        lineItem.lots.push(lot);
-                                       lotSum = lotSum + l.quantity;
+                                       lotSum = lotSum + parseInt(l.quantity,10);
                                    }
 
                                });
