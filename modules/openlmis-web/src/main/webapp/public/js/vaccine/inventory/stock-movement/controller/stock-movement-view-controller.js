@@ -127,7 +127,7 @@ console.log($routeParams);
 
                 distribution.fromFacilityId = homeFacility.id;
                 distribution.toFacilityId= toFacilityId;
-                distribution.programId=program[0].id;programId;
+                distribution.programId=program[0].id;
                 distribution.distributionDate = $scope.stockCardsByCategory[0].issueDate;
                 distribution.periodId = periodId;
                 distribution.orderId = orderId;
