@@ -95,7 +95,7 @@ SiteController.resolve = {
 
   geoLevels: function ($q, $route, $timeout, GetGeoZoneByLevels) {
 
-    var deferred = $q.defer();
+       var deferred = $q.defer();
 
     $timeout(function () {
       GetGeoZoneByLevels.get({geoLevelCode: "reg"}, function (data) {

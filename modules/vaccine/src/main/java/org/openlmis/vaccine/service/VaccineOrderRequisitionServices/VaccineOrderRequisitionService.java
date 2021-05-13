@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.*;
-import org.openlmis.order.domain.Order;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
@@ -20,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 
@@ -166,7 +168,7 @@ public class VaccineOrderRequisitionService {
         orderRequisitionRepository.Update(orderRequisition);
         VaccineOrderRequisitionStatusChange change = new VaccineOrderRequisitionStatusChange(orderRequisition, VaccineOrderStatus.SUBMITTED, userId);
         statusChangeRepository.insert(change);
-        notificationService.sendOrderRequisitionStatusChangeNotification(orderRequisition,userId);
+//        notificationService.sendOrderRequisitionStatusChangeNotification(orderRequisition,userId);
     }
 
     public VaccineOrderRequisition getLastReport(Long facilityId, Long programId) {
