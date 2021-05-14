@@ -405,10 +405,19 @@
                                     <a id='supplyLinesMenu' href="/public/pages/admin/supply-line/index.html"
                                        openlmis-message="menu.header.supply.lines"></a>
                                 </li>
+                                <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                                    <a id="programProductsMenu"
+                                       href="/public/pages/admin/program-product-category/index.html"
+                                       openlmis-message="header.program.product.categories"></a>
+                                </li>
                                 <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')">
                                     <a id="facilityApprovedProductsMenu"
                                        href="/public/pages/admin/facility-approved-product/index.html"
                                        openlmis-message="header.facility.approved.products"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                                    <a id="productCategoriessMenu" href="/public/pages/admin/product-category/index.html"
+                                       openlmis-message="label.product.category"></a>
                                 </li>
                                 <li ng-show="hasPermission('MANAGE_PRODUCT')">
                                     <a id="productsMenu" href="/public/pages/admin/product/index.html"

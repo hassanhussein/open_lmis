@@ -50,5 +50,9 @@
       <a id="productTab" href="/public/pages/admin/product/index.html"
          openlmis-message="header.products"></a>
     </li>
+    <li ng-show="hasPermission('MANAGE_PRODUCT')" ng-class="programProductSelected">
+      <a id="programProductTab" href="/public/pages/admin/program-product-category/index.html"
+         openlmis-message="label.program.products"></a>
+    </li>
   </ul>
 </div>

@@ -1,0 +1,36 @@
+<script type="text/ng-template" id="product-category-configuration.html" xmlns="http://www.w3.org/1999/html">
+    <div class="modal-header">
+        <h3 class="modal-title"><span openlmis-message="label.product.category.configuration"></span>
+
+        </h3>
+    </div>
+    <div class="modal-body">
+        <div  class="form-group" >
+            <label for="isPage" class="col-sm-3 control-label" openlmis-message="label.product.category.code"></label>
+            <div  class="col-sm-2">
+                <input  type="text" id="isPage"
+                       ng-model="category.code">
+                </input>
+            </div>
+
+            <label for="name" class="col-sm-3 control-label" openlmis-message="label.product.category.name"></label>
+            <div class="col-sm-5">
+                <input type="text" id="name"
+                        ng-model="category.name">
+                </input>
+            </div>
+
+            <label  for="displayName" class="col-sm-3 control-label" openlmis-message="label.product.category.display.order"></label>
+            <div class="col-sm-5">
+                <input type="number" id="displayName"
+                       ng-model="category.displayOrder">
+                </input>
+            </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <input name="button" class="btn btn-default" type="button" ng-click="cancel()" openlmis-message="button.cancel"/>
+        <input id="btnAdd" name="button"  ng-click="save(category,selectedItem)" class="btn btn-primary" type="button" openlmis-message="button.save "/>
+    </div>
+</script>

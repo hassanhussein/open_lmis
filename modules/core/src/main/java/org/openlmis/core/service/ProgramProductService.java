@@ -223,6 +223,14 @@ public class ProgramProductService {
         }
     }
 
+    @Transactional
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void saveAllProgramProducts(List<ProgramProduct> programProducts) {
+        for (ProgramProduct programProduct : programProducts) {
+            save(programProduct);
+        }
+    }
+
     public void insertISA(ProgramProductISA isa) {
         programProductRepository.insertISA(isa);
     }
@@ -233,5 +241,13 @@ public class ProgramProductService {
 
     public List<ProgramProduct> getByProductId(Long productId) {
         return programProductRepository.getByProductId(productId);
+    }
+
+    public List<ProgramProduct> getByProgramAndCategory(Long programId, Long categoryId) {
+        return programProductRepository.getByProgramAndCategory(programId,categoryId);
+    }
+
+    public List<Product> getUnCategorizedProducts(Long categoryId, Long programId) {
+        return programProductRepository.getUnCategorizedProducts(categoryId,programId);
     }
 }

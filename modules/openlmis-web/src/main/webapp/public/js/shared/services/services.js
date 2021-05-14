@@ -593,3 +593,26 @@ services.factory('ActivePrograms', function ($resource) {
 services.factory('DataRangeConfigurationList', function ($resource) {
     return $resource('/requisitions/data-range-informations.json', {}, {});
 });
+
+services.factory('ProgramProductCategoryList', function ($resource) {
+    return $resource('/program-product-categories/category/:categoryId/program/:programId.json', {}, {});
+});
+
+services.factory('ProductsFilter', function ($resource) {
+    return $resource('/program-product-categories/filter/category/:categoryId/program/:programId.json',
+        {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
+});
+
+services.factory('ProgramProductCategories', function ($resource) {
+    var resource = $resource('/program-product-categories/:id.json', {}, {
+
+        update: {
+            method: 'PUT', params: {id: '@id'}
+        },
+        delete: {
+            method: 'DELETE',
+            params: {id: '@id'}
+        }
+    });
+    return resource;
+});

@@ -1610,3 +1610,17 @@ services.factory('FacilityRnRStatusesReportList', function ($resource) {
 services.factory('GetRejectedRnRByZoneReport', function ($resource) {
     return $resource('/reports/reportdata/zone-rejected-rnr', {}, {});
 });
+
+services.factory('ProductCategories', function ($resource) {
+    var resource = $resource('/product-category/product-categories/:id.json', {}, {
+
+        update: {
+            method: 'PUT', params: {id: '@id'}
+        },
+        delete: {
+            method: 'DELETE',
+            params: {id: '@id'}
+        }
+    });
+    return resource;
+});

@@ -31,129 +31,136 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramProductRepository {
 
-  @Autowired
-  private ProgramProductMapper mapper;
+    @Autowired
+    private ProgramProductMapper mapper;
 
-  @Autowired
-  private ProgramRepository programRepository;
+    @Autowired
+    private ProgramRepository programRepository;
 
-  @Autowired
-  private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-  @Autowired
-  private ProgramProductPriceMapper programProductPriceMapper;
+    @Autowired
+    private ProgramProductPriceMapper programProductPriceMapper;
 
-  @Autowired
-  private ProgramProductIsaMapper programProductIsaMapper;
+    @Autowired
+    private ProgramProductIsaMapper programProductIsaMapper;
 
-  public void save(ProgramProduct programProduct) {
-    Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
-    programProduct.getProgram().setId(programId);
+    public void save(ProgramProduct programProduct) {
+        Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
+        programProduct.getProgram().setId(programId);
 
-    validateProductCode(programProduct.getProduct().getCode());
+        validateProductCode(programProduct.getProduct().getCode());
 
-    Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
-    programProduct.getProduct().setId(productId);
+        Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
+        programProduct.getProduct().setId(productId);
 
-    try {
-      if (programProduct.getId() == null) {
-        mapper.insert(programProduct);
-      } else {
+        try {
+            if (programProduct.getId() == null) {
+                mapper.insert(programProduct);
+            } else {
+                mapper.update(programProduct);
+            }
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("error.duplicate.product.code.program.code");
+        }
+    }
+
+    public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
+        Long programProductId = mapper.getIdByProgramAndProductId(programId, productId);
+
+        if (programProductId == null)
+            throw new DataException("programProduct.product.program.invalid");
+
+        return programProductId;
+    }
+
+    private void validateProductCode(String code) {
+        if (code == null || code.isEmpty() || productRepository.getIdByCode(code) == null) {
+            throw new DataException("product.code.invalid");
+        }
+    }
+
+    public void updateCurrentPrice(ProgramProduct programProduct) {
+        mapper.updateCurrentPrice(programProduct);
+    }
+
+    public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
+        return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
+                productRepository.getIdByCode(programProduct.getProduct().getCode()));
+    }
+
+    public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
+        return mapper.getByProgramAndProductId(programId, productId);
+    }
+
+    public void updatePriceHistory(ProgramProductPrice programProductPrice) {
+        programProductPriceMapper.closeLastActivePrice(programProductPrice);
+        programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
+    }
+
+    public void updateProgramProduct(ProgramProduct programProduct) {
         mapper.update(programProduct);
-      }
-    } catch (DuplicateKeyException duplicateKeyException) {
-      throw new DataException("error.duplicate.product.code.program.code");
     }
-  }
 
-  public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
-    Long programProductId = mapper.getIdByProgramAndProductId(programId, productId);
-
-    if (programProductId == null)
-      throw new DataException("programProduct.product.program.invalid");
-
-    return programProductId;
-  }
-
-  private void validateProductCode(String code) {
-    if (code == null || code.isEmpty() || productRepository.getIdByCode(code) == null) {
-      throw new DataException("product.code.invalid");
+    public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
+        return programProductPriceMapper.get(programProduct);
     }
-  }
 
-  public void updateCurrentPrice(ProgramProduct programProduct) {
-    mapper.updateCurrentPrice(programProduct);
-  }
+    public List<ProgramProduct> getByProgram(Program program) {
+        return mapper.getByProgram(program);
+    }
 
-  public ProgramProduct getByProgramAndProductCode(ProgramProduct programProduct) {
-    return getByProgramAndProductId(programRepository.getIdByCode(programProduct.getProgram().getCode()),
-      productRepository.getIdByCode(programProduct.getProduct().getCode()));
-  }
+    public ProgramProduct getById(Long id) {
+        return mapper.getById(id);
+    }
 
-  public ProgramProduct getByProgramAndProductId(Long programId, Long productId) {
-    return mapper.getByProgramAndProductId(programId, productId);
-  }
+    public List<ProgramProduct> getByProductCode(String code) {
+        return mapper.getByProductCode(code);
+    }
 
-  public void updatePriceHistory(ProgramProductPrice programProductPrice) {
-    programProductPriceMapper.closeLastActivePrice(programProductPrice);
-    programProductPriceMapper.insertNewCurrentPrice(programProductPrice);
-  }
+    public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
+        return mapper.getByProgramIdAndFacilityTypeCode(programId, facilityTypeCode);
+    }
 
-  public void updateProgramProduct(ProgramProduct programProduct) {
-    mapper.update(programProduct);
-  }
+    public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
+        return mapper.getNonFullSupplyProductsForProgram(program);
+    }
 
-  public ProgramProductPrice getProgramProductPrice(ProgramProduct programProduct) {
-    return programProductPriceMapper.get(programProduct);
-  }
+    public List<ProgramProduct> searchByProgram(String searchParam, Pagination pagination) {
+        return mapper.searchByProgram(searchParam, pagination);
+    }
 
-  public List<ProgramProduct> getByProgram(Program program) {
-    return mapper.getByProgram(program);
-  }
+    public Integer getTotalSearchResultCount(String searchParam) {
+        return mapper.getTotalSearchResultCount(searchParam);
+    }
 
-  public ProgramProduct getById(Long id) {
-    return mapper.getById(id);
-  }
+    public List<ProgramProduct> searchByProduct(String searchParam, Pagination pagination) {
+        return mapper.searchByProduct(searchParam, pagination);
+    }
 
-  public List<ProgramProduct> getByProductCode(String code) {
-    return mapper.getByProductCode(code);
-  }
+    public List<ProgramProduct> getActiveByProgram(Long programId) {
+        return mapper.getActiveByProgram(programId);
+    }
 
-  public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
-    return mapper.getByProgramIdAndFacilityTypeCode(programId, facilityTypeCode);
-  }
+    @Transactional
+    public void insertISA(ProgramProductISA programProductISA) {
+        programProductIsaMapper.insert(programProductISA);
+    }
 
-  public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
-    return mapper.getNonFullSupplyProductsForProgram(program);
-  }
+    public void updateISA(ProgramProductISA programProductISA) {
+        programProductIsaMapper.update(programProductISA);
+    }
 
-  public List<ProgramProduct> searchByProgram(String searchParam, Pagination pagination) {
-    return mapper.searchByProgram(searchParam, pagination);
-  }
+    public List<ProgramProduct> getByProductId(Long productId) {
+        return mapper.getByProductId(productId);
+    }
 
-  public Integer getTotalSearchResultCount(String searchParam) {
-    return mapper.getTotalSearchResultCount(searchParam);
-  }
+    public List<ProgramProduct> getByProgramAndCategory(Long programId, Long categoryId) {
+        return mapper.getByProgramAndCategory(programId, categoryId);
+    }
 
-  public List<ProgramProduct> searchByProduct(String searchParam, Pagination pagination) {
-    return mapper.searchByProduct(searchParam, pagination);
-  }
-
-  public List<ProgramProduct> getActiveByProgram(Long programId) {
-    return mapper.getActiveByProgram(programId);
-  }
-
-  @Transactional
-  public void insertISA(ProgramProductISA programProductISA)
-  {
-    programProductIsaMapper.insert(programProductISA);
-  }
-
-  public void updateISA(ProgramProductISA programProductISA) {
-    programProductIsaMapper.update(programProductISA);
-  }
-
-  public List<ProgramProduct> getByProductId(Long productId) {
-    return mapper.getByProductId(productId);
-  }
+    public List<Product> getUnCategorizedProducts(Long categoryId, Long programId) {
+        return mapper.getUnCategorizedProducts(categoryId, programId);
+    }
 }
