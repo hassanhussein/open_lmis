@@ -161,6 +161,11 @@
                            openlmis-message="button.edit"
                            ng-click="edit(programProduct)"/>
 
+                    <input id="deleteButton{{$index}}" ng-hide="programProduct.underEdit" type="button"
+                           class="btn btn-danger btn-small"
+                           openlmis-message="button.delete"
+                           ng-click="confirmDelete(programProduct)"/>
+
                 </td>
             </tr>
             <tr ng-if="programProduct.underEdit" class="save-cancel-row">

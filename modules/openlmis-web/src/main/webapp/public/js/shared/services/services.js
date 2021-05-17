@@ -603,7 +603,7 @@ services.factory('ProductsFilter', function ($resource) {
         {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
 });
 
-services.factory('ProgramProductCategories', function ($resource) {
+services.factory('ProgramProductCategorys', function ($resource) {
     var resource = $resource('/program-product-categories/:id.json', {}, {
 
         update: {
@@ -615,4 +615,8 @@ services.factory('ProgramProductCategories', function ($resource) {
         }
     });
     return resource;
+});
+
+services.factory('DeleteProgramProductCategory', function ($resource) {
+    return $resource('/program-product-categories/:id.json',  {id: '@id'},{});
 });

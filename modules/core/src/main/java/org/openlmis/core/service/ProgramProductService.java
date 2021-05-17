@@ -80,6 +80,7 @@ public class ProgramProductService {
         programProductRepository.updateCurrentPrice(programProduct);
         programProductRepository.updatePriceHistory(programProductPrice);
     }
+
     @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(ProgramProduct programProduct) {
         validateAndSetProductCategory(programProduct);
@@ -244,10 +245,14 @@ public class ProgramProductService {
     }
 
     public List<ProgramProduct> getByProgramAndCategory(Long programId, Long categoryId) {
-        return programProductRepository.getByProgramAndCategory(programId,categoryId);
+        return programProductRepository.getByProgramAndCategory(programId, categoryId);
     }
 
     public List<Product> getUnCategorizedProducts(Long categoryId, Long programId) {
-        return programProductRepository.getUnCategorizedProducts(categoryId,programId);
+        return programProductRepository.getUnCategorizedProducts(categoryId, programId);
+    }
+
+    public void deleteProgramProductId(ProgramProduct programProduct) {
+        programProductRepository.deleteProgramProduct(programProduct.getId());
     }
 }

@@ -163,4 +163,7 @@ public class ProgramProductRepository {
     public List<Product> getUnCategorizedProducts(Long categoryId, Long programId) {
         return mapper.getUnCategorizedProducts(categoryId, programId);
     }
+    public void deleteProgramProduct(Long programProductId){
+        mapper.deleteById(programProductId);
+    }
 }

@@ -119,10 +119,23 @@ public class ProgramProductCategoryController extends BaseController {
         return openLmisResponse.successEntity(successMessage);
     }
 
-    @RequestMapping(value = "/{id}", method = DELETE, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id) {
 
-        return OpenLmisResponse.success("message.facility.approved.product.deleted.success");
+    @RequestMapping(value = "/{id}", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id,
+                                                   @RequestBody ProgramProduct programProduct,
+                                                   HttpServletRequest request) {
+        programProduct.setId(id);
+        programProduct.setModifiedBy(loggedInUserId(request));
+        try {
+            service.deleteProgramProductId(programProduct);
+        } catch (DataException e) {
+            return OpenLmisResponse.error(e, BAD_REQUEST);
+        }
+
+        OpenLmisResponse openLmisResponse = new OpenLmisResponse(PROGRAM_PRODUCT, programProduct);
+        String successMessage = messageService.message("message.facility.approved.product.updated.success", programProduct.getProduct().getPrimaryName());
+        return openLmisResponse.successEntity(successMessage);
     }
+
 }

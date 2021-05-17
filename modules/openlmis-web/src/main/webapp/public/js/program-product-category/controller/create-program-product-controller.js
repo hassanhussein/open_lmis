@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function CreateProgramProductCategoryController($scope, ProgramProductCategories, messageService) {
+function CreateProgramProductCategoryController($scope, ProgramProductCategorys, messageService) {
     $scope.addedProgramProducts = [];
     $scope.selectedProgramProductList = [];
     $scope.selectedProgram = $scope.$parent.$parent.productSelected;
@@ -128,7 +128,7 @@ function CreateProgramProductCategoryController($scope, ProgramProductCategories
             }
             $scope.modalError = undefined;
 
-            ProgramProductCategories.save({}, $scope.addedProgramProducts, function (data) {
+            ProgramProductCategorys.save({}, $scope.addedProgramProducts, function (data) {
                 $scope.$parent.$parent.message = data.success;
                 $scope.$parent.$parent.programProductsListModal = false;
                 $scope.$parent.$parent.loadProducts(1);

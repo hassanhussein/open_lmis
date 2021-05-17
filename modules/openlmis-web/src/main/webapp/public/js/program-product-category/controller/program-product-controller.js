@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function ProgramProductController($scope, programs,ProgramProductCategoryList,ProgramProductCategories, productCategories, ProductsFilter, ProgramProducts, $dialog, messageService) {
+function ProgramProductController($scope, programs,ProgramProductCategoryList,DeleteProgramProductCategory, ProgramProductCategorys, productCategories, ProductsFilter, ProgramProducts, $dialog, messageService) {
 
   $scope.programs = programs;
   $scope.productCategories = productCategories;
@@ -68,10 +68,11 @@ function ProgramProductController($scope, programs,ProgramProductCategoryList,Pr
 
   var deleteProgramProduct = function (result) {
     if (result) {
-      ProgramProducts.remove({id: $scope.programProductsToBeDeleted.id}, $scope.programProductsToBeDeleted, function (data) {
-        $scope.message = messageService.get(data.success, $scope.programProductsToBeDeleted.programProduct.product.primaryName);
+        DeleteProgramProductCategory.save({id: $scope.programProductsToBeDeleted.id}, $scope.programProductsToBeDeleted, function (data) {
+        $scope.message = messageService.get(data.success, $scope.programProductsToBeDeleted.product.primaryName);
         $scope.loadProducts($scope.currentPage);
       }, {});
+        $scope.focusSuccessMessageDiv();
     }
   };
 
@@ -80,8 +81,8 @@ function ProgramProductController($scope, programs,ProgramProductCategoryList,Pr
     var options = {
       id: "confirmDialog",
       header: "label.confirm.action",
-      body: messageService.get('msg.delete.facility.approved.product.confirmation',
-        $scope.programProductsToBeDeleted.programProduct.product.primaryName, $scope.productCategory.name, $scope.program.name)
+      body: messageService.get('msg.delete.program.product.confirmation',
+        $scope.programProductsToBeDeleted.product.primaryName, $scope.productCategory.name, $scope.program.name)
     };
     OpenLmisDialog.newDialog(options, deleteProgramProduct, $dialog);
   };
@@ -117,7 +118,7 @@ function ProgramProductController($scope, programs,ProgramProductCategoryList,Pr
     programProducts.productCategory = $scope.productCategory;
     programProducts.program = $scope.program;
 
-      ProgramProductCategories.update({id: programProducts.id}, programProducts, function (data) {
+      ProgramProductCategorys.update({id: programProducts.id}, programProducts, function (data) {
       $scope.updatedProgramProduct = data.programProducts;
       $scope.message = data.success;
       programProducts.underEdit = false;
